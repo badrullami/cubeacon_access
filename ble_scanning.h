@@ -1,3 +1,5 @@
+//#include "notif.h"
+
 #define NUMBEROFBEACON 100
 
 typedef struct BLE {

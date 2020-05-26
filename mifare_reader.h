@@ -1,4 +1,5 @@
 #include <MFRC522.h>
+
 #define INTERVAL 1000
 
 #define RST_PIN    22          // Configurable, see typical pin layout above
@@ -10,6 +11,10 @@ uint8_t block = 2;
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 //function_prototype
+extern void notif_cardpresent();
+extern void notif_accessgrant();
+extern void notif_accessreject();
+
 void mifare_init();
 void mifare_read();
 String read_rfid();
@@ -37,21 +42,23 @@ void mifare_read(){
       {
         Serial.println("rfid_tag: " + rfid);
         readBlock(block, readbackblock);
+        Serial.println(master_key);
         Serial.print("read block: ");
         String key_access = "";
-        for (int j=0 ; j<16 ; j++)
+        for (int j=0 ; j<15 ; j++)
         {
           key_access += (char)readbackblock[j];
         }
         Serial.println(key_access);
-        Serial.println("");
         mfrc522.PICC_HaltA();
         delay(1000);
         if(key_access == master_key){
           Serial.println("Access granted!");
+          notif_accessgrant();
         }
         else{
           Serial.println("Access rejected!");
+          notif_accessreject();
        }
      }
    }
@@ -73,6 +80,7 @@ String read_rfid(){
       
       content.toUpperCase();    
       Serial.println("found mifare card!");
+      notif_cardpresent();
     }
   }
   return content;
