@@ -13,7 +13,6 @@ void notif_init(){
   pinMode(LED0,OUTPUT);
   pinMode(LED1,OUTPUT);
   pinMode(BUZZER,OUTPUT);
-  
 }
 
 void notif_beep(uint8_t counter, uint16_t longbeep){

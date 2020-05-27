@@ -10,11 +10,14 @@ void setup() {
     Serial.println("An Error has occurred while mounting SPIFFS");
   }
   config_all();
+  delay(500);
   setup_wifi();
   ble_scan_init();
   mifare_init();
   notif_init();
   notif_cardpresent();
+  mqtt_init();
+  mqtt_reconnect();
 }
 
 void loop() {
@@ -23,4 +26,7 @@ void loop() {
   delay(10);
   mifare_read();
   delay(10);
+  if(!mqtt_loop()){
+    mqtt_reconnect();
+  }
 }

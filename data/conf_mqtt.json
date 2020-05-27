@@ -1,0 +1,7 @@
+{
+  "backend_user": "eyroMQTT",
+  "backend_passwrd": "",
+  "backend_server": "broker.hivemq.com",
+  "backend_port": 1883,
+  "subs_topic": "barriergate/#"
+}

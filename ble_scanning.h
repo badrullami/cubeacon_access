@@ -15,6 +15,8 @@ BLE_t b[NUMBEROFBEACON];
 char rawData[26];
 char uuid[16];
 uint8_t i = 0;
+double proximity = 1.0;
+String master_key = "eyrodigitallabs"; 
 
 //function prototype
 void ble_scan_init();
@@ -100,4 +102,34 @@ double calculateDistance(double rssi) {
         double accuracy = (0.89976) * pow(ratio, 7.7095) + 0.111;
         return accuracy;
     }
+}
+
+void check_beacon(){
+  if(current_millis - previous_millis >= UPDATE_MILLIS){
+    previous_millis = current_millis;
+    
+    for(int j=0; j<NUMBEROFBEACON; j++){
+     if(current_millis-b[j].time>BLE_TIMEOUT && b[j].minor!=NULL){
+        Serial.print(b[j].minor); Serial.print("-"); Serial.println("out");
+        b[j].minor = 0;
+        b[j].rss = 0;
+        b[j].time = 0;
+        b[j].counter = 0;
+        b[j].flag_detect = false;
+     }
+     else if( b[j].minor!=NULL){
+        Serial.print(b[j].minor); Serial.print(" inrange with rssi = "); Serial.println(b[j].rss);
+     }
+    }
+
+    for(int j=0; j<NUMBEROFBEACON; j++)
+    {
+      if(b[j].counter == DETECT_COUNTER && b[j].flag_detect == false){
+          b[j].flag_detect = true;
+          LED_ON(LED0);
+          delay(2000);
+          LED_OFF(LED0);
+      }
+    }
+  }
 }
