@@ -8,6 +8,11 @@
 #define  BUZZER_ON()   digitalWrite(BUZZER, HIGH)
 #define  BUZZER_OFF()  digitalWrite(BUZZER, LOW)
 
+boolean state = false;
+
+void notif_cardpresent();
+void notif_accessgrant();
+void notif_accessreject();
 
 void notif_init(){
   pinMode(LED0,OUTPUT);
@@ -26,14 +31,21 @@ void notif_beep(uint8_t counter, uint16_t longbeep){
   }  
 }
 
-void notif_cardpresent(){
+void notif_powerup(){
   notif_beep(2,100);
 }
 
 void notif_accessgrant(){
-  notif_beep(1,1000);
+  notif_beep(2,70);
 }
 
 void notif_accessreject(){
   notif_beep(2,500);
+}
+void notif_network_connected(){
+  state = !state; 
+  digitalWrite(LED1,state);
+}
+void notif_network_notconnected(){
+  digitalWrite(LED1,false);
 }

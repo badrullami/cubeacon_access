@@ -1,6 +1,6 @@
 //#include "notif.h"
 
-#define NUMBEROFBEACON 100
+#define NUMBEROFBEACON 50
 
 typedef struct BLE {
   int minor;
@@ -16,7 +16,8 @@ char rawData[26];
 char uuid[16];
 uint8_t i = 0;
 double proximity = 1.0;
-String master_key = "eyrodigitallabs"; 
+int ble_timeout = 5000; //in millisecond
+uint8_t detect_counter = 3;
 
 //function prototype
 void ble_scan_init();
@@ -105,11 +106,9 @@ double calculateDistance(double rssi) {
 }
 
 void check_beacon(){
-  if(current_millis - previous_millis >= UPDATE_MILLIS){
-    previous_millis = current_millis;
-    
+  unsigned long current_millis = millis();
     for(int j=0; j<NUMBEROFBEACON; j++){
-     if(current_millis-b[j].time>BLE_TIMEOUT && b[j].minor!=NULL){
+     if(current_millis-b[j].time>ble_timeout && b[j].minor!=NULL){
         Serial.print(b[j].minor); Serial.print("-"); Serial.println("out");
         b[j].minor = 0;
         b[j].rss = 0;
@@ -124,12 +123,9 @@ void check_beacon(){
 
     for(int j=0; j<NUMBEROFBEACON; j++)
     {
-      if(b[j].counter == DETECT_COUNTER && b[j].flag_detect == false){
+      if(b[j].counter == detect_counter && b[j].flag_detect == false){
           b[j].flag_detect = true;
-          LED_ON(LED0);
-          delay(2000);
-          LED_OFF(LED0);
+          
       }
     }
-  }
 }

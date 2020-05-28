@@ -36,10 +36,10 @@ void mqtt_reconnect(){
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (client.connect(subs_topic.c_str())) {
+    if (client.connect("barrier_client")) {
       Serial.println("connected");
       // Subscribe
-      client.subscribe("barriergate/#");
+      client.subscribe(subs_topic.c_str());
     } 
     else {
       Serial.print("failed, rc=");

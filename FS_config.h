@@ -4,6 +4,7 @@
 #define CONF_STA_FILE "/conf_sta.json"
 #define CONF_AP_FILE "/conf_ap.json"
 #define CONF_BACKEND_FILE "/conf_mqtt.json"
+#define CONF_BLE_FILE "/conf_scanning.json"
 
 String json = "";
 const char* json_value = "";
@@ -95,16 +96,28 @@ void set_backend(const char* backend_server, const char* username, const char* p
   write_spiff(CONF_BACKEND_FILE,raw_json);
 }
 
+void set_ble(double distance,int timeout, uint8_t counter){
+  proximity = distance;
+  ble_timeout = timeout;
+  detect_counter = counter;
+  String raw_json = open_spiff(CONF_BLE_FILE);
+  deserializeJson(doc,raw_json);
+  doc["proximity"] = proximity;
+  doc["ble_timeout"] = ble_timeout;
+  doc["detect_counter"] = detect_counter;
+  raw_json = "";
+  serializeJson(doc,raw_json);
+  write_spiff(CONF_BLE_FILE,raw_json);
+}
+
 void read_sta_conf(){
   String raw_json = open_spiff(CONF_STA_FILE);
   Serial.println(raw_json);
   deserializeJson(doc,raw_json);
   json_value = doc["sta_ssid"];
   sta_ssid = json_value;
-  Serial.println(sta_ssid);
   json_value = doc["sta_passwrd"];
   sta_passwrd = json_value;
-  Serial.println(sta_passwrd);
 }
 
 void read_ap_conf(){
@@ -113,10 +126,8 @@ void read_ap_conf(){
   deserializeJson(doc,raw_json);
   json_value = doc["ap_ssid"];
   ap_ssid = json_value;
-  Serial.println(ap_ssid);
   json_value = doc["ap_passwrd"];
   ap_passwrd = json_value;
-  Serial.println(ap_passwrd);
 }
 
 void read_backend_conf(){
@@ -125,23 +136,28 @@ void read_backend_conf(){
   deserializeJson(doc,raw_json);
   json_value = doc["backend_server"];
   backend_server = json_value;
-  Serial.println(backend_server);
   json_value = doc["backend_user"];
   backend_username = json_value;
-  Serial.println(backend_username);
   json_value = doc["backend_passwrd"];
   backend_passwrd = json_value;
-  Serial.println(backend_passwrd);
   backend_port = doc["backend_port"];
-  Serial.println(backend_port);
   json_value = doc["subs_topic"];
   subs_topic =json_value;
-  Serial.println(subs_topic);
+}
+
+void read_ble_conf(){
+  String raw_json = open_spiff(CONF_BLE_FILE);
+  Serial.println(raw_json);
+  deserializeJson(doc,raw_json);
+  proximity = doc["proximity"];
+  ble_timeout = doc["ble_timeout"];
+  detect_counter = doc["detect_counter"];
 }
 
 
 void config_all(){
-  read_backend_conf(); delay(500);
-  read_sta_conf(); delay(500);
-  read_ap_conf(); delay(500);
+  read_backend_conf();
+  read_sta_conf(); 
+  read_ap_conf(); 
+  read_ble_conf();
 }

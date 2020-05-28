@@ -1,6 +1,8 @@
 #include "include.h"
 
-extern void notif_cardpresent();
+#define INTERVAL 1000
+
+unsigned long prevMillis=0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -10,23 +12,30 @@ void setup() {
     Serial.println("An Error has occurred while mounting SPIFFS");
   }
   config_all();
-  delay(500);
   setup_wifi();
   ble_scan_init();
   mifare_init();
   notif_init();
-  notif_cardpresent();
+  notif_powerup();
   mqtt_init();
   mqtt_reconnect();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  unsigned long current_millis = millis();
   read_ble();
   delay(10);
   mifare_read();
   delay(10);
-  if(!mqtt_loop()){
-    mqtt_reconnect();
+  if (current_millis - prevMillis >= INTERVAL){
+    prevMillis = current_millis;
+    check_beacon();
+    notif_network_connected();
+    if(!mqtt_loop()){
+      notif_network_notconnected();
+      mqtt_reconnect();
+    }
   }
+  
 }

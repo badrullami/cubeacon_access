@@ -7,11 +7,11 @@
 
 unsigned long previousMillis = 0;
 uint8_t block = 2;
+String master_key = "eyrodigitallabs"; 
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 //function_prototype
-extern void notif_cardpresent();
 extern void notif_accessgrant();
 extern void notif_accessreject();
 
@@ -80,7 +80,6 @@ String read_rfid(){
       
       content.toUpperCase();    
       Serial.println("found mifare card!");
-      notif_cardpresent();
     }
   }
   return content;
