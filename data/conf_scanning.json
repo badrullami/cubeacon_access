@@ -1,5 +1,6 @@
 {
   "proximity": 1.0,
   "ble_timeout": 5000,
-  "detect_counter": 3
+  "detect_counter": 2,
+  "master_key": "eyrodigitallabs"
 }

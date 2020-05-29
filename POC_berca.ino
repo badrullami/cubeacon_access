@@ -19,6 +19,9 @@ void setup() {
   notif_powerup();
   mqtt_init();
   mqtt_reconnect();
+  iBeacon_init();
+  iBeacon_set(1111,2222,1000);
+  iBeacon_start();
 }
 
 void loop() {

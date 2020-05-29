@@ -1,5 +1,11 @@
 #include <PubSubClient.h>
 
+#define PUBS_TOPIC  dev_type() + "rs/" + dev_id()
+#define HB_TOPIC    dev_type() + "hb/" + dev_id()
+#define DATA_TOPIC  dev_type() + "rc/" + dev_id()
+#define HEAD_TOPIC  dev_type() + dev_id()
+#define SUBS_TOPIC  dev_type() + dev_id() + "/#"
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 
@@ -10,7 +16,8 @@ void mqtt_callback(char* topic, byte* payload, unsigned int len);
 String backend_server = "";
 String backend_username = "";
 String backend_passwrd = "";
-String subs_topic = "";
+String subs_topic = SUBS_TOPIC;
+String pubs_topic = PUBS_TOPIC;
 uint16_t backend_port = 0;
 
 void mqtt_init(){
@@ -30,6 +37,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int len){
   payload_s = payload_s.substring(0,len);
 
   Serial.println("receive message");
+  iBeacon_stop();
 }
 
 void mqtt_reconnect(){
@@ -39,6 +47,7 @@ void mqtt_reconnect(){
     if (client.connect("barrier_client")) {
       Serial.println("connected");
       // Subscribe
+      Serial.println("subs topic: " + subs_topic);
       client.subscribe(subs_topic.c_str());
     } 
     else {
@@ -53,4 +62,9 @@ void mqtt_reconnect(){
 
 boolean mqtt_loop(){
   return client.loop();
+}
+
+void mqtt_publish(String topic, String payload){
+  client.publish(topic.c_str(),payload.c_str());
+  Serial.println("publish data :" + topic + " " + payload);
 }

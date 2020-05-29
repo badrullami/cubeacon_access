@@ -15,11 +15,12 @@ BLE_t b[NUMBEROFBEACON];
 char rawData[26];
 char uuid[16];
 uint8_t i = 0;
-double proximity = 1.0;
-int ble_timeout = 5000; //in millisecond
-uint8_t detect_counter = 3;
+double proximity = 0;
+int ble_timeout = 0; //in millisecond
+uint8_t detect_counter = 0;
 
 //function prototype
+extern void notif_accessgrant();
 void ble_scan_init();
 void read_ble();
 double calculateDistance(double rssi);
@@ -63,7 +64,15 @@ void read_ble(){
 
     double rss = rssi;
     double distance = calculateDistance(rss);
-    if(distance <= proximity){
+    if(distance <= proximity && cardMinor != iBeacon_self_minor){
+      for(int k=0; k<NUMBEROFBEACON; k++){
+                   if(b[k].counter == detect_counter && b[k].flag_detect == false){
+                      b[k].flag_detect = true;
+                      Serial.println("access grant!");
+                      notif_accessgrant();
+                      mqtt_publish(pubs_topic,(String)b[k].minor);
+                   }
+                }
       for(i=0; i<NUMBEROFBEACON; i++){
                if(cardMinor == b[i].minor){
                 b[i].time = millis();
@@ -73,12 +82,13 @@ void read_ble(){
                 return;
               }
             }
-            for(int j=0; j<NUMBEROFBEACON; j++){
+      for(int j=0; j<NUMBEROFBEACON; j++){
               if(b[j].minor == NULL){
                 b[j].minor = cardMinor;
                 b[j].time = millis();
                 b[j].rss = rssi;
-                b[j].counter += 1;
+                b[j].counter = 1;
+                b[j].flag_detect = false;
                 Serial.print("append success ->"); Serial.println(b[j].minor);
                 return;
             }
@@ -119,13 +129,5 @@ void check_beacon(){
      else if( b[j].minor!=NULL){
         Serial.print(b[j].minor); Serial.print(" inrange with rssi = "); Serial.println(b[j].rss);
      }
-    }
-
-    for(int j=0; j<NUMBEROFBEACON; j++)
-    {
-      if(b[j].counter == detect_counter && b[j].flag_detect == false){
-          b[j].flag_detect = true;
-          
-      }
     }
 }

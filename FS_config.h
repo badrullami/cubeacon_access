@@ -90,13 +90,12 @@ void set_backend(const char* backend_server, const char* username, const char* p
   doc["backend_user"] = username;
   doc["backend_passwrd"] = passwrd;
   doc["backend_port"] = backend_port;
-  doc["subs_topic"] = subs_topic;
   raw_json = "";
   serializeJson(doc,raw_json);
   write_spiff(CONF_BACKEND_FILE,raw_json);
 }
 
-void set_ble(double distance,int timeout, uint8_t counter){
+void set_scanning(double distance,int timeout, uint8_t counter, String key){
   proximity = distance;
   ble_timeout = timeout;
   detect_counter = counter;
@@ -105,6 +104,7 @@ void set_ble(double distance,int timeout, uint8_t counter){
   doc["proximity"] = proximity;
   doc["ble_timeout"] = ble_timeout;
   doc["detect_counter"] = detect_counter;
+  doc["master_key"] = master_key;
   raw_json = "";
   serializeJson(doc,raw_json);
   write_spiff(CONF_BLE_FILE,raw_json);
@@ -141,17 +141,17 @@ void read_backend_conf(){
   json_value = doc["backend_passwrd"];
   backend_passwrd = json_value;
   backend_port = doc["backend_port"];
-  json_value = doc["subs_topic"];
-  subs_topic =json_value;
 }
 
-void read_ble_conf(){
+void read_scanning_conf(){
   String raw_json = open_spiff(CONF_BLE_FILE);
   Serial.println(raw_json);
   deserializeJson(doc,raw_json);
   proximity = doc["proximity"];
   ble_timeout = doc["ble_timeout"];
   detect_counter = doc["detect_counter"];
+  json_value = doc["master_key"];
+  master_key = json_value;
 }
 
 
@@ -159,5 +159,5 @@ void config_all(){
   read_backend_conf();
   read_sta_conf(); 
   read_ap_conf(); 
-  read_ble_conf();
+  read_scanning_conf();
 }
