@@ -11,10 +11,8 @@ uint16_t iBeacon_self_minor = 0;
 void iBeacon_init(){
   BLEDevice::init("myESP32");
   pAdvertising = BLEDevice::getAdvertising();
-  pAdvertising = BLEDevice::getAdvertising();
 }
-void iBeacon_set(uint16_t major, uint16_t minor, uint16_t interval) {
-  String uuid = BEACON_UUID;
+void iBeacon_set(uint16_t major, uint16_t minor, uint16_t interval, String uuid) {
   Serial.println("set uuid: " + uuid);
   Serial.println("set major: " + String(major));
   Serial.println("set minor: " + String(minor));

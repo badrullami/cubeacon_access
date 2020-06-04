@@ -1,11 +1,15 @@
 #include "include.h"
-
+#define SERVO_PIN 12
 #define INTERVAL 1000
 
-unsigned long prevMillis=0;
+unsigned long prevMillis = 0;
 
 void setup() {
   // put your setup code here, to run once:
+  notif_init();
+  myservo_init(SERVO_PIN);
+  myservo_close();
+  notif_powerup();
   Serial.begin(115200);
   delay(100);
   if(!flash_init()){
@@ -13,15 +17,12 @@ void setup() {
   }
   config_all();
   setup_wifi();
+  webserver_start();
   ble_scan_init();
   mifare_init();
-  notif_init();
-  notif_powerup();
+  iBeacon_init();
   mqtt_init();
   mqtt_reconnect();
-  iBeacon_init();
-  iBeacon_set(1111,2222,1000);
-  iBeacon_start();
 }
 
 void loop() {
@@ -40,5 +41,4 @@ void loop() {
       mqtt_reconnect();
     }
   }
-  
 }

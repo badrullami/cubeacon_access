@@ -55,7 +55,7 @@ void mifare_read(){
         if(key_access == master_key){
           Serial.println("Access granted!");
           notif_accessgrant();
-          mqtt_publish(pubs_topic,rfid);
+          append_mifare(rfid);
         }
         else{
           Serial.println("Access rejected!");

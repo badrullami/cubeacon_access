@@ -36,7 +36,7 @@ void notif_powerup(){
 }
 
 void notif_accessgrant(){
-  notif_beep(2,70);
+  notif_beep(1,100);
 }
 
 void notif_accessreject(){

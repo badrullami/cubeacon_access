@@ -1,8 +1,6 @@
-//#include "notif.h"
-
 #define NUMBEROFBEACON 50
-
 typedef struct BLE {
+  int major;
   int minor;
   int rss;
   int counter;
@@ -37,6 +35,7 @@ void read_ble(){
    rawData[0]=in;
    uint8_t sum = 0;
    String uuidf = "";
+   char uuid_lastdigit[10];
    
    for(i=1;i<=26;i++)
    {
@@ -50,6 +49,8 @@ void read_ble(){
         uuid[i]=rawData[i+2];
         uuidf+=uuid[i];
     }
+    sprintf(uuid_lastdigit,"%02x%02x",rawData[16],rawData[17]);
+            
     uint16_t cardMajor=rawData[18];
     cardMajor=(cardMajor<<8) + rawData[19];
 
@@ -70,7 +71,7 @@ void read_ble(){
                       b[k].flag_detect = true;
                       Serial.println("access grant!");
                       notif_accessgrant();
-                      mqtt_publish(pubs_topic,(String)b[k].minor);
+                      append_beacon(uuid_lastdigit,cardMajor,cardMinor);
                    }
                 }
       for(i=0; i<NUMBEROFBEACON; i++){
@@ -84,6 +85,7 @@ void read_ble(){
             }
       for(int j=0; j<NUMBEROFBEACON; j++){
               if(b[j].minor == NULL){
+                b[j].major = cardMajor;
                 b[j].minor = cardMinor;
                 b[j].time = millis();
                 b[j].rss = rssi;
@@ -120,6 +122,7 @@ void check_beacon(){
     for(int j=0; j<NUMBEROFBEACON; j++){
      if(current_millis-b[j].time>ble_timeout && b[j].minor!=NULL){
         Serial.print(b[j].minor); Serial.print("-"); Serial.println("out");
+        b[j].major = 0;
         b[j].minor = 0;
         b[j].rss = 0;
         b[j].time = 0;

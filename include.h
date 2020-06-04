@@ -1,9 +1,13 @@
 #include "device_code.h"
+#include "tool.h"
 #include "iBeacon_advertising.h"
+#include "encryption.h"
 #include "wifi_manager.h"
+#include "myservo.h"
 #include "mqtt_manager.h"
 #include "ble_scanning.h"
 #include "mifare_reader.h"
 #include "notif.h"
 #include "FS_config.h"
+#include "webserver_handle.h"
 #include <SPI.h>
