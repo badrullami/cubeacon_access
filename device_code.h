@@ -1,5 +1,4 @@
-String get_mac_address(bool delimited)
-{
+String get_mac_address(bool delimited){
   uint8_t baseMac[6];
   // Get MAC address for WiFi station
   //esp_read_mac(baseMac, ESP_MAC_WIFI_SOFTAP);

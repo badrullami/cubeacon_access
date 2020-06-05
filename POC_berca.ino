@@ -16,8 +16,9 @@ void setup() {
     Serial.println("An Error has occurred while mounting SPIFFS");
   }
   config_all();
-  setup_wifi();
+  setup_wifi_ap();
   webserver_start();
+  setup_wifi_sta();
   ble_scan_init();
   mifare_init();
   iBeacon_init();

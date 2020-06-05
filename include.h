@@ -1,3 +1,4 @@
+#include <WiFi.h>
 #include "device_code.h"
 #include "tool.h"
 #include "iBeacon_advertising.h"

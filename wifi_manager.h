@@ -1,18 +1,19 @@
-#include <WiFi.h>
-
-
 String sta_ssid = "";
 String sta_passwrd = "";
 
-const char* ap_ssid = "";
-const char* ap_passwrd = "";
+String ap_ssid = "";
+String ap_passwrd = "";
 
-void setup_wifi() {
-  WiFi.mode(WIFI_AP_STA); 
-  WiFi.softAP(ap_ssid,ap_passwrd);
+void setup_wifi_ap(){
+  WiFi.disconnect();
+  WiFi.mode(WIFI_STA); 
+  WiFi.softAP(ap_ssid.c_str(),ap_passwrd.c_str());
   Serial.print("AP mode on ");
   Serial.println(WiFi.softAPIP());
-  delay(1000);
+  delay(1000); 
+}
+
+void setup_wifi_sta(){
   Serial.print("Connecting to ");
   Serial.println(sta_ssid);
 

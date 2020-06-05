@@ -78,12 +78,11 @@ void set_ap(const char* ssid, const char* passwrd){
   write_spiff(CONF_AP_FILE,raw_json);
 }
 
-void set_backend(const char* backend_server, const char* username, const char* passwrd, uint16_t port, const char* subs){
+void set_backend(const char* backend_server, const char* username, const char* passwrd, uint16_t port){
   backend_server = backend_server;
   backend_username = username;
   backend_passwrd = passwrd;
   backend_port = port;
-  subs_topic = subs;
   String raw_json = open_spiff(CONF_BACKEND_FILE);
   deserializeJson(doc,raw_json);
   doc["backend_server"] = backend_server;

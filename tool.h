@@ -10,6 +10,5 @@ String parse_string(String data, char separator, int index){
         strIndex[1] = (i == maxIndex) ? i+1 : i;
     }
   }
-
   return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
 }

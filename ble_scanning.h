@@ -1,4 +1,5 @@
 #define NUMBEROFBEACON 50
+
 typedef struct BLE {
   int major;
   int minor;
