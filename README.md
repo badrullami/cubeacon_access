@@ -15,7 +15,7 @@ The packet contains following field of information :
 |--------|----|
 | device_id | 6 last digit of MAC address |
 | card_type | card type of result from scanning  |
-| uid | for cubeacon card  : 4 last digit uuid + 3 digit major + minor for mifare : 6 digit card uid|
+| uid | for cubeacon card  : 4 last digit uuid + 3 digit major + minor, for mifare : 6 digit card uid|
 #
 
 To get the published packet from the broker simply subscribe to the specified channel, see bellow example.
